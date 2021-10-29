@@ -12,8 +12,9 @@ import (
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
 )
 
-func InitializeHttpServer(config *config.Config) (*controller.HttpServer, func(), error) {
+func InitializeHttpServer() (*controller.HttpServer, func(), error) {
 	panic(wire.Build(
+		config.ConfigSet,
 		repository.PostgresConnectionSet,
 		repository.PostgresMeowRepositorySet,
 		service.MeowTranslatorServiceSet,

@@ -16,16 +16,17 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeHttpServer(config2 *config.Config) (*controller.HttpServer, func(), error) {
+func InitializeHttpServer() (*controller.HttpServer, func(), error) {
+	configConfig := config.ProvideConfig()
 	meowTranslatorService := service.ProvideMeowTranslatorService()
-	postgresConnection, cleanup, err := repository.ProvidePostgresConnection(config2)
+	postgresConnection, cleanup, err := repository.ProvidePostgresConnection(configConfig)
 	if err != nil {
 		return nil, nil, err
 	}
 	postgresMeowRepository := repository.ProvidePostgresMeowRepository(postgresConnection)
 	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository)
 	meowController := controller.ProvideMeowController(сreateMeowCommandHandler)
-	httpServer := controller.ProvideHttpServer(meowController)
+	httpServer := controller.ProvideHttpServer(configConfig, meowController)
 	return httpServer, func() {
 		cleanup()
 	}, nil
