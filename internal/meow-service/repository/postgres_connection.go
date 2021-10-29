@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/google/wire"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/config"
@@ -14,15 +13,7 @@ type PostgresConnection struct {
 }
 
 func ProvidePostgresConnection(config *config.Config) (*PostgresConnection, func(), error) {
-	connectionString := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		config.Database.Host,
-		config.Database.Port,
-		config.Database.User,
-		config.Database.Password,
-		config.Database.Name, config.Database.SSLMode)
-
-	db, err := sql.Open("postgres", connectionString)
+	db, err := sql.Open("postgres", config.DatabaseConnectionString)
 	if err != nil {
 		return nil, nil, err
 	}
