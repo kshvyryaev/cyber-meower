@@ -22,13 +22,13 @@ func (controller *MeowController) Route(router *gin.Engine) {
 func (controller *MeowController) CreateMeow(context *gin.Context) {
 	var command command.CreateMeowCommand
 	if err := context.BindJSON(&command); err != nil {
-		// TODO: Добавить обработку ошибок
+		context.Error(err)
 		return
 	}
 
 	response, err := controller.CreateMeowCommandHandler.Handle(&command)
 	if err != nil {
-		// TODO: Добавить обработку ошибок
+		context.Error(err)
 		return
 	}
 

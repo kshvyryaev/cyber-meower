@@ -10,7 +10,7 @@ func main() {
 
 	server, _, err := di.InitializeHttpServer(config)
 	if err != nil {
-		// TODO: Добавить обработку ошибок
+		// TODO: Добавить логгирование
 	}
 
 	server.Run()

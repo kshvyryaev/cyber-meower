@@ -20,7 +20,7 @@ func ProvidePostgresConnection(config *config.Config) (*PostgresConnection, func
 
 	cleanup := func() {
 		if err = db.Close(); err != nil {
-			// TODO: Добавить обработку ошибок
+			// TODO: Добавить логгирование
 		}
 	}
 

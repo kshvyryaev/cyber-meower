@@ -7,6 +7,7 @@ import (
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/domain"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
+	"github.com/pkg/errors"
 )
 
 type CreateMeowCommand struct {
@@ -31,7 +32,7 @@ func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*C
 
 	id, err := handler.repository.Create(meow)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "create meow command handler error")
 	}
 
 	return &CreateMeowCommandResponse{ID: id}, nil

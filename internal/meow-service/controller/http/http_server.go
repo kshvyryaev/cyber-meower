@@ -10,7 +10,12 @@ type HttpServer struct {
 }
 
 func (server *HttpServer) Run() {
-	router := gin.Default()
+	router := gin.New()
+
+	router.Use(gin.Logger())
+	router.Use(RecoveryHandlerMiddleware())
+	router.Use(ErrorHandlerMiddleware())
+
 	server.MeowController.Route(router)
 	router.Run()
 }
