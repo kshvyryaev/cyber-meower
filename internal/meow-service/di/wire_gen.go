@@ -8,6 +8,7 @@ package di
 
 import (
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/command"
+	"github.com/kshvyryaev/cyber-meower/internal/meow-service/config"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/controller/http"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
@@ -15,9 +16,9 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeHttpServer() (*controller.HttpServer, func(), error) {
+func InitializeHttpServer(config2 *config.Config) (*controller.HttpServer, func(), error) {
 	meowTranslatorService := service.ProvideMeowTranslatorService()
-	postgresConnection, cleanup, err := repository.ProvidePostgresConnection()
+	postgresConnection, cleanup, err := repository.ProvidePostgresConnection(config2)
 	if err != nil {
 		return nil, nil, err
 	}
