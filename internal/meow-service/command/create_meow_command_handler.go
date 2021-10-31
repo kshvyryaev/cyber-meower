@@ -32,7 +32,7 @@ func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*C
 
 	id, err := handler.repository.Create(meow)
 	if err != nil {
-		return nil, errors.Wrap(err, "create meow command handler error")
+		return nil, errors.Wrap(err, "create meow command handler")
 	}
 
 	return &CreateMeowCommandResponse{ID: id}, nil

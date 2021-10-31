@@ -14,7 +14,7 @@ type Config struct {
 func ProvideConfig() *Config {
 	return &Config{
 		Port:                     *flag.String("port", "8080", "Server port"),
-		DatabaseConnectionString: *flag.String("database-connection-string", "host=localhost port=5432 user=postgres password=postgres dbname=cybermeowerdb sslmode=disable", "Database connection string"),
+		DatabaseConnectionString: *flag.String("databaseConnectionString", "host=localhost port=5432 user=postgres password=postgres dbname=cybermeowerdb sslmode=disable", "Database connection string"),
 	}
 }
 

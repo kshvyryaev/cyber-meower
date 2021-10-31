@@ -15,7 +15,7 @@ func (repository *PostgresMeowRepository) Create(meow *domain.Meow) (int, error)
 	err := repository.Connection.Database.QueryRow("INSERT INTO meows(body, created_on) VALUES($1, $2) RETURNING id", meow.Body, meow.CreatedOn).Scan(&id)
 
 	if err != nil {
-		return 0, errors.Wrap(err, "postgres meow repository error")
+		return 0, errors.Wrap(err, "postgres meow repository")
 	}
 
 	return int(id), nil

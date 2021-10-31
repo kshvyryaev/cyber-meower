@@ -10,9 +10,10 @@ import (
 	controller "github.com/kshvyryaev/cyber-meower/internal/meow-service/controller/http"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
+	"go.uber.org/zap"
 )
 
-func InitializeHttpServer() (*controller.HttpServer, func(), error) {
+func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), error) {
 	panic(wire.Build(
 		config.ConfigSet,
 		repository.PostgresConnectionSet,
@@ -20,6 +21,8 @@ func InitializeHttpServer() (*controller.HttpServer, func(), error) {
 		service.MeowTranslatorServiceSet,
 		command.СreateMeowCommandHandlerSet,
 		controller.MeowControllerSet,
+		controller.ErrorHandlerMiddlewareSet,
+		controller.RecoveryHandlerMiddlewareSet,
 		controller.HttpServerSet,
 	))
 }

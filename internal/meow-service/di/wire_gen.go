@@ -12,21 +12,24 @@ import (
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/controller/http"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
+	"go.uber.org/zap"
 )
 
 // Injectors from wire.go:
 
-func InitializeHttpServer() (*controller.HttpServer, func(), error) {
+func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), error) {
 	configConfig := config.ProvideConfig()
 	meowTranslatorService := service.ProvideMeowTranslatorService()
-	postgresConnection, cleanup, err := repository.ProvidePostgresConnection(configConfig)
+	postgresConnection, cleanup, err := repository.ProvidePostgresConnection(configConfig, logger)
 	if err != nil {
 		return nil, nil, err
 	}
 	postgresMeowRepository := repository.ProvidePostgresMeowRepository(postgresConnection)
 	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository)
 	meowController := controller.ProvideMeowController(сreateMeowCommandHandler)
-	httpServer := controller.ProvideHttpServer(configConfig, meowController)
+	errorHandlerMiddleware := controller.ProvideErrorHandlerMiddleware(logger)
+	recoveryHandlerMiddleware := controller.ProvideRecoveryHandlerMiddleware(logger)
+	httpServer := controller.ProvideHttpServer(configConfig, meowController, errorHandlerMiddleware, recoveryHandlerMiddleware)
 	return httpServer, func() {
 		cleanup()
 	}, nil
