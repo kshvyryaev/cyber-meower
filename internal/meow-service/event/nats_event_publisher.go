@@ -14,6 +14,19 @@ type NatsEventPublisher struct {
 	connection *nats.Conn
 }
 
+func ProvideNatsEventPublisher(config *config.Config) (*NatsEventPublisher, func(), error) {
+	connection, err := nats.Connect(config.EventStoreAddress)
+	if err != nil {
+		return nil, nil, errors.Wrap(err, "nats event publisher")
+	}
+
+	cleanup := func() {
+		connection.Close()
+	}
+
+	return &NatsEventPublisher{connection: connection}, cleanup, nil
+}
+
 func (publisher *NatsEventPublisher) Publish(event Event) error {
 	bytes, err := publisher.parseEventToBytes(event)
 	if err != nil {
@@ -37,19 +50,6 @@ func (publisher *NatsEventPublisher) parseEventToBytes(event Event) ([]byte, err
 	}
 
 	return buffer.Bytes(), nil
-}
-
-func ProvideNatsEventPublisher(config *config.Config) (*NatsEventPublisher, func(), error) {
-	connection, err := nats.Connect(config.EventStoreAddress)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, "nats event publisher")
-	}
-
-	cleanup := func() {
-		connection.Close()
-	}
-
-	return &NatsEventPublisher{connection: connection}, cleanup, nil
 }
 
 var NatsEventPublisherSet = wire.NewSet(

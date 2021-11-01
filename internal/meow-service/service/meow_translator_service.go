@@ -3,11 +3,13 @@ package service
 import (
 	"regexp"
 	"strings"
-
-	"github.com/google/wire"
 )
 
 type MeowTranslatorService struct{}
+
+func ProvideMeowTranslatorService() *MeowTranslatorService {
+	return &MeowTranslatorService{}
+}
 
 func (service *MeowTranslatorService) Translate(body string) string {
 	sb := strings.Builder{}
@@ -34,11 +36,3 @@ func (service *MeowTranslatorService) Translate(body string) string {
 
 	return sb.String()
 }
-
-func ProvideMeowTranslatorService() *MeowTranslatorService {
-	return &MeowTranslatorService{}
-}
-
-var MeowTranslatorServiceSet = wire.NewSet(
-	ProvideMeowTranslatorService,
-)

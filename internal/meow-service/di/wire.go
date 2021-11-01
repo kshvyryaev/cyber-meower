@@ -16,15 +16,15 @@ import (
 
 func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), error) {
 	panic(wire.Build(
-		config.ConfigSet,
-		service.MeowTranslatorServiceSet,
-		repository.PostgresConnectionSet,
+		config.ProvideConfig,
+		service.ProvideMeowTranslatorService,
+		repository.ProvidePostgresConnection,
 		repository.PostgresMeowRepositorySet,
 		event.NatsEventPublisherSet,
-		command.СreateMeowCommandHandlerSet,
-		controller.MeowControllerSet,
-		controller.ErrorHandlerMiddlewareSet,
-		controller.RecoveryHandlerMiddlewareSet,
-		controller.HttpServerSet,
+		command.ProvideСreateMeowCommandHandler,
+		controller.ProvideMeowController,
+		controller.ProvideErrorHandlerMiddleware,
+		controller.ProvideRecoveryHandlerMiddleware,
+		controller.ProvideHttpServer,
 	))
 }

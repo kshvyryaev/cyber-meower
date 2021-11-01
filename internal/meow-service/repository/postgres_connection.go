@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/google/wire"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/config"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
@@ -27,7 +26,3 @@ func ProvidePostgresConnection(config *config.Config, logger *zap.Logger) (*Post
 
 	return &PostgresConnection{database: db}, cleanup, nil
 }
-
-var PostgresConnectionSet = wire.NewSet(
-	ProvidePostgresConnection,
-)

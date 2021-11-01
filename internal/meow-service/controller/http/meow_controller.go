@@ -4,12 +4,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/command"
 )
 
 type MeowController struct {
 	createMeowCommandHandler *command.СreateMeowCommandHandler
+}
+
+func ProvideMeowController(createMeowCommandHandler *command.СreateMeowCommandHandler) *MeowController {
+	return &MeowController{
+		createMeowCommandHandler: createMeowCommandHandler,
+	}
 }
 
 func (controller *MeowController) Route(router *gin.Engine) {
@@ -34,11 +39,3 @@ func (controller *MeowController) CreateMeow(context *gin.Context) {
 
 	context.JSON(http.StatusOK, response)
 }
-
-func ProvideMeowController(createMeowCommandHandler *command.СreateMeowCommandHandler) *MeowController {
-	return &MeowController{
-		createMeowCommandHandler: createMeowCommandHandler,
-	}
-}
-
-var MeowControllerSet = wire.NewSet(ProvideMeowController)

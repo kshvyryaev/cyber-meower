@@ -2,8 +2,6 @@ package config
 
 import (
 	"flag"
-
-	"github.com/google/wire"
 )
 
 type Config struct {
@@ -19,7 +17,3 @@ func ProvideConfig() *Config {
 		EventStoreAddress:        *flag.String("eventStoreAddress", "127.0.0.1:4222", "Event store address"),
 	}
 }
-
-var ConfigSet = wire.NewSet(
-	ProvideConfig,
-)

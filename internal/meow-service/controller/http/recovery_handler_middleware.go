@@ -4,12 +4,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 	"go.uber.org/zap"
 )
 
 type RecoveryHandlerMiddleware struct {
 	logger *zap.Logger
+}
+
+func ProvideRecoveryHandlerMiddleware(logger *zap.Logger) *RecoveryHandlerMiddleware {
+	return &RecoveryHandlerMiddleware{
+		logger: logger,
+	}
 }
 
 func (handler *RecoveryHandlerMiddleware) Handle() gin.HandlerFunc {
@@ -25,13 +30,3 @@ func (handler *RecoveryHandlerMiddleware) Handle() gin.HandlerFunc {
 		handler.logger.Error("panic happend: " + err)
 	})
 }
-
-func ProvideRecoveryHandlerMiddleware(logger *zap.Logger) *RecoveryHandlerMiddleware {
-	return &RecoveryHandlerMiddleware{
-		logger: logger,
-	}
-}
-
-var RecoveryHandlerMiddlewareSet = wire.NewSet(
-	ProvideRecoveryHandlerMiddleware,
-)

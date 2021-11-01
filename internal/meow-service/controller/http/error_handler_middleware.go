@@ -4,12 +4,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 	"go.uber.org/zap"
 )
 
 type ErrorHandlerMiddleware struct {
 	logger *zap.Logger
+}
+
+func ProvideErrorHandlerMiddleware(logger *zap.Logger) *ErrorHandlerMiddleware {
+	return &ErrorHandlerMiddleware{
+		logger: logger,
+	}
 }
 
 func (handler *ErrorHandlerMiddleware) Handle() gin.HandlerFunc {
@@ -24,13 +29,3 @@ func (handler *ErrorHandlerMiddleware) Handle() gin.HandlerFunc {
 		}
 	}
 }
-
-func ProvideErrorHandlerMiddleware(logger *zap.Logger) *ErrorHandlerMiddleware {
-	return &ErrorHandlerMiddleware{
-		logger: logger,
-	}
-}
-
-var ErrorHandlerMiddlewareSet = wire.NewSet(
-	ProvideErrorHandlerMiddleware,
-)

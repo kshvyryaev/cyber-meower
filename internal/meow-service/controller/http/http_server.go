@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/config"
 )
 
@@ -11,16 +10,6 @@ type HttpServer struct {
 	meowController            *MeowController
 	errorHandlerMiddleware    *ErrorHandlerMiddleware
 	recoveryHandlerMiddleware *RecoveryHandlerMiddleware
-}
-
-func (server *HttpServer) Run() {
-	router := gin.New()
-
-	router.Use(server.recoveryHandlerMiddleware.Handle())
-	router.Use(server.errorHandlerMiddleware.Handle())
-
-	server.meowController.Route(router)
-	router.Run(":" + server.config.Port)
 }
 
 func ProvideHttpServer(
@@ -36,4 +25,12 @@ func ProvideHttpServer(
 	}
 }
 
-var HttpServerSet = wire.NewSet(ProvideHttpServer)
+func (server *HttpServer) Run() {
+	router := gin.New()
+
+	router.Use(server.recoveryHandlerMiddleware.Handle())
+	router.Use(server.errorHandlerMiddleware.Handle())
+
+	server.meowController.Route(router)
+	router.Run(":" + server.config.Port)
+}

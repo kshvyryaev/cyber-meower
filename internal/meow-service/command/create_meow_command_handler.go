@@ -3,7 +3,6 @@ package command
 import (
 	"time"
 
-	"github.com/google/wire"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/domain"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/event"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
@@ -23,6 +22,17 @@ type СreateMeowCommandHandler struct {
 	meowTranslator *service.MeowTranslatorService
 	repository     repository.MeowRepository
 	eventPublisher event.EventPublisher
+}
+
+func ProvideСreateMeowCommandHandler(
+	meowTranslator *service.MeowTranslatorService,
+	repository repository.MeowRepository,
+	eventPublisher event.EventPublisher) *СreateMeowCommandHandler {
+	return &СreateMeowCommandHandler{
+		meowTranslator: meowTranslator,
+		repository:     repository,
+		eventPublisher: eventPublisher,
+	}
 }
 
 func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*CreateMeowCommandResponse, error) {
@@ -50,18 +60,3 @@ func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*C
 
 	return &CreateMeowCommandResponse{ID: id}, nil
 }
-
-func ProvideСreateMeowCommandHandler(
-	meowTranslator *service.MeowTranslatorService,
-	repository repository.MeowRepository,
-	eventPublisher event.EventPublisher) *СreateMeowCommandHandler {
-	return &СreateMeowCommandHandler{
-		meowTranslator: meowTranslator,
-		repository:     repository,
-		eventPublisher: eventPublisher,
-	}
-}
-
-var СreateMeowCommandHandlerSet = wire.NewSet(
-	ProvideСreateMeowCommandHandler,
-)
