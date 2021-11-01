@@ -16,7 +16,6 @@ type HttpServer struct {
 func (server *HttpServer) Run() {
 	router := gin.New()
 
-	router.Use(gin.Logger())
 	router.Use(server.RecoveryHandlerMiddleware.Handle())
 	router.Use(server.ErrorHandlerMiddleware.Handle())
 
