@@ -9,7 +9,7 @@ import (
 )
 
 type ErrorHandlerMiddleware struct {
-	Logger *zap.Logger
+	logger *zap.Logger
 }
 
 func (handler *ErrorHandlerMiddleware) Handle() gin.HandlerFunc {
@@ -20,14 +20,14 @@ func (handler *ErrorHandlerMiddleware) Handle() gin.HandlerFunc {
 			err := context.Errors[0].Err
 			context.AbortWithStatusJSON(http.StatusInternalServerError, ErrorResponse{Message: err.Error()})
 
-			handler.Logger.Error("error happend: " + err.Error())
+			handler.logger.Error("error happend: " + err.Error())
 		}
 	}
 }
 
 func ProvideErrorHandlerMiddleware(logger *zap.Logger) *ErrorHandlerMiddleware {
 	return &ErrorHandlerMiddleware{
-		Logger: logger,
+		logger: logger,
 	}
 }
 

@@ -3,7 +3,7 @@ package domain
 import "time"
 
 type Meow struct {
-	ID        int64
+	ID        int
 	Body      string
 	CreatedOn time.Time
 }

@@ -9,7 +9,7 @@ import (
 )
 
 type MeowController struct {
-	CreateMeowCommandHandler *command.СreateMeowCommandHandler
+	createMeowCommandHandler *command.СreateMeowCommandHandler
 }
 
 func (controller *MeowController) Route(router *gin.Engine) {
@@ -26,7 +26,7 @@ func (controller *MeowController) CreateMeow(context *gin.Context) {
 		return
 	}
 
-	response, err := controller.CreateMeowCommandHandler.Handle(&command)
+	response, err := controller.createMeowCommandHandler.Handle(&command)
 	if err != nil {
 		context.Error(err)
 		return
@@ -37,7 +37,7 @@ func (controller *MeowController) CreateMeow(context *gin.Context) {
 
 func ProvideMeowController(createMeowCommandHandler *command.СreateMeowCommandHandler) *MeowController {
 	return &MeowController{
-		CreateMeowCommandHandler: createMeowCommandHandler,
+		createMeowCommandHandler: createMeowCommandHandler,
 	}
 }
 

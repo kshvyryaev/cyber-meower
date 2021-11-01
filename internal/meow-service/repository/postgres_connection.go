@@ -10,7 +10,7 @@ import (
 )
 
 type PostgresConnection struct {
-	Database *sql.DB
+	database *sql.DB
 }
 
 func ProvidePostgresConnection(config *config.Config, logger *zap.Logger) (*PostgresConnection, func(), error) {
@@ -21,11 +21,11 @@ func ProvidePostgresConnection(config *config.Config, logger *zap.Logger) (*Post
 
 	cleanup := func() {
 		if err = db.Close(); err != nil {
-			logger.Error("cannot clean database: " + err.Error())
+			logger.Error("cannot close database: " + err.Error())
 		}
 	}
 
-	return &PostgresConnection{Database: db}, cleanup, nil
+	return &PostgresConnection{database: db}, cleanup, nil
 }
 
 var PostgresConnectionSet = wire.NewSet(

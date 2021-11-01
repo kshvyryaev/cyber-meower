@@ -10,6 +10,7 @@ import (
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/command"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/config"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/controller/http"
+	"github.com/kshvyryaev/cyber-meower/internal/meow-service/event"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
 	"go.uber.org/zap"
@@ -25,12 +26,18 @@ func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), e
 		return nil, nil, err
 	}
 	postgresMeowRepository := repository.ProvidePostgresMeowRepository(postgresConnection)
-	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository)
+	natsEventPublisher, cleanup2, err := event.ProvideNatsEventPublisher(configConfig)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository, natsEventPublisher)
 	meowController := controller.ProvideMeowController(сreateMeowCommandHandler)
 	errorHandlerMiddleware := controller.ProvideErrorHandlerMiddleware(logger)
 	recoveryHandlerMiddleware := controller.ProvideRecoveryHandlerMiddleware(logger)
 	httpServer := controller.ProvideHttpServer(configConfig, meowController, errorHandlerMiddleware, recoveryHandlerMiddleware)
 	return httpServer, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }

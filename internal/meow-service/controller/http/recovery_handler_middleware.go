@@ -9,7 +9,7 @@ import (
 )
 
 type RecoveryHandlerMiddleware struct {
-	Logger *zap.Logger
+	logger *zap.Logger
 }
 
 func (handler *RecoveryHandlerMiddleware) Handle() gin.HandlerFunc {
@@ -22,13 +22,13 @@ func (handler *RecoveryHandlerMiddleware) Handle() gin.HandlerFunc {
 			context.AbortWithStatus(http.StatusInternalServerError)
 		}
 
-		handler.Logger.Error("panic happend: " + err)
+		handler.logger.Error("panic happend: " + err)
 	})
 }
 
 func ProvideRecoveryHandlerMiddleware(logger *zap.Logger) *RecoveryHandlerMiddleware {
 	return &RecoveryHandlerMiddleware{
-		Logger: logger,
+		logger: logger,
 	}
 }
 

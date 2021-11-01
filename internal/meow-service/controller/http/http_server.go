@@ -7,20 +7,20 @@ import (
 )
 
 type HttpServer struct {
-	Config                    *config.Config
-	MeowController            *MeowController
-	ErrorHandlerMiddleware    *ErrorHandlerMiddleware
-	RecoveryHandlerMiddleware *RecoveryHandlerMiddleware
+	config                    *config.Config
+	meowController            *MeowController
+	errorHandlerMiddleware    *ErrorHandlerMiddleware
+	recoveryHandlerMiddleware *RecoveryHandlerMiddleware
 }
 
 func (server *HttpServer) Run() {
 	router := gin.New()
 
-	router.Use(server.RecoveryHandlerMiddleware.Handle())
-	router.Use(server.ErrorHandlerMiddleware.Handle())
+	router.Use(server.recoveryHandlerMiddleware.Handle())
+	router.Use(server.errorHandlerMiddleware.Handle())
 
-	server.MeowController.Route(router)
-	router.Run(":" + server.Config.Port)
+	server.meowController.Route(router)
+	router.Run(":" + server.config.Port)
 }
 
 func ProvideHttpServer(
@@ -29,10 +29,10 @@ func ProvideHttpServer(
 	errorHandlerMiddleware *ErrorHandlerMiddleware,
 	recoveryHandlerMiddleware *RecoveryHandlerMiddleware) *HttpServer {
 	return &HttpServer{
-		Config:                    config,
-		MeowController:            meowController,
-		ErrorHandlerMiddleware:    errorHandlerMiddleware,
-		RecoveryHandlerMiddleware: recoveryHandlerMiddleware,
+		config:                    config,
+		meowController:            meowController,
+		errorHandlerMiddleware:    errorHandlerMiddleware,
+		recoveryHandlerMiddleware: recoveryHandlerMiddleware,
 	}
 }
 

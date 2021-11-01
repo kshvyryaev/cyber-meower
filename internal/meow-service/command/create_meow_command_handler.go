@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/wire"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/domain"
+	"github.com/kshvyryaev/cyber-meower/internal/meow-service/event"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
 	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
 	"github.com/pkg/errors"
@@ -21,6 +22,7 @@ type CreateMeowCommandResponse struct {
 type СreateMeowCommandHandler struct {
 	meowTranslator *service.MeowTranslatorService
 	repository     repository.MeowRepository
+	eventPublisher event.EventPublisher
 }
 
 func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*CreateMeowCommandResponse, error) {
@@ -35,15 +37,28 @@ func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*C
 		return nil, errors.Wrap(err, "create meow command handler")
 	}
 
+	event := &event.MeowCreatedEvent{
+		ID:        id,
+		Body:      meow.Body,
+		CreatedOn: meow.CreatedOn,
+	}
+
+	handler.eventPublisher.Publish(event)
+	if err != nil {
+		return nil, errors.Wrap(err, "create meow command handler")
+	}
+
 	return &CreateMeowCommandResponse{ID: id}, nil
 }
 
 func ProvideСreateMeowCommandHandler(
 	meowTranslator *service.MeowTranslatorService,
-	repository repository.MeowRepository) *СreateMeowCommandHandler {
+	repository repository.MeowRepository,
+	eventPublisher event.EventPublisher) *СreateMeowCommandHandler {
 	return &СreateMeowCommandHandler{
 		meowTranslator: meowTranslator,
 		repository:     repository,
+		eventPublisher: eventPublisher,
 	}
 }
 
