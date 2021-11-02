@@ -20,24 +20,24 @@ type CreateMeowCommandResponse struct {
 }
 
 type СreateMeowCommandHandler struct {
-	meowTranslator *service.MeowTranslatorService
+	translator     *service.MeowTranslatorService
 	repository     repository.MeowRepository
-	eventPublisher event.EventPublisher
+	eventPublisher event.MeowEventPublisher
 }
 
 func ProvideСreateMeowCommandHandler(
-	meowTranslator *service.MeowTranslatorService,
+	translator *service.MeowTranslatorService,
 	repository repository.MeowRepository,
-	eventPublisher event.EventPublisher) *СreateMeowCommandHandler {
+	eventPublisher event.MeowEventPublisher) *СreateMeowCommandHandler {
 	return &СreateMeowCommandHandler{
-		meowTranslator: meowTranslator,
+		translator:     translator,
 		repository:     repository,
 		eventPublisher: eventPublisher,
 	}
 }
 
 func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*CreateMeowCommandResponse, error) {
-	meowBody := handler.meowTranslator.Translate(command.Body)
+	meowBody := handler.translator.Translate(command.Body)
 	meow := &domain.Meow{
 		Body:      meowBody,
 		CreatedOn: time.Now().UTC(),
@@ -55,9 +55,6 @@ func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*C
 	}
 
 	handler.eventPublisher.Publish(event)
-	if err != nil {
-		return nil, errors.Wrap(err, "create meow command handler")
-	}
 
 	return &CreateMeowCommandResponse{ID: id}, nil
 }

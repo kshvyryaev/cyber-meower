@@ -1,24 +1,26 @@
 package repository
 
 import (
+	"database/sql"
+
 	"github.com/google/wire"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/domain"
 	"github.com/pkg/errors"
 )
 
 type PostgresMeowRepository struct {
-	connection *PostgresConnection
+	database *sql.DB
 }
 
-func ProvidePostgresMeowRepository(connection *PostgresConnection) *PostgresMeowRepository {
+func ProvidePostgresMeowRepository(database *sql.DB) *PostgresMeowRepository {
 	return &PostgresMeowRepository{
-		connection: connection,
+		database: database,
 	}
 }
 
 func (repository *PostgresMeowRepository) Create(meow *domain.Meow) (int, error) {
 	var id int
-	err := repository.connection.database.QueryRow("INSERT INTO meows(body, created_on) VALUES($1, $2) RETURNING id", meow.Body, meow.CreatedOn).Scan(&id)
+	err := repository.database.QueryRow("INSERT INTO meows(body, created_on) VALUES($1, $2) RETURNING id", meow.Body, meow.CreatedOn).Scan(&id)
 
 	if err != nil {
 		return 0, errors.Wrap(err, "postgres meow repository")

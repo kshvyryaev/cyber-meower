@@ -18,9 +18,10 @@ func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), e
 	panic(wire.Build(
 		config.ProvideConfig,
 		service.ProvideMeowTranslatorService,
-		repository.ProvidePostgresConnection,
+		repository.ProvidePostgresDatabase,
 		repository.PostgresMeowRepositorySet,
-		event.NatsEventPublisherSet,
+		event.ProvideNatsConnection,
+		event.NatsMeowEventPublisherSet,
 		command.ProvideСreateMeowCommandHandler,
 		controller.ProvideMeowController,
 		controller.ProvideErrorHandlerMiddleware,

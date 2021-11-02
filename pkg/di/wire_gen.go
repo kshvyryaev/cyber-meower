@@ -21,22 +21,29 @@ import (
 func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), error) {
 	configConfig := config.ProvideConfig()
 	meowTranslatorService := service.ProvideMeowTranslatorService()
-	postgresConnection, cleanup, err := repository.ProvidePostgresConnection(configConfig, logger)
+	db, cleanup, err := repository.ProvidePostgresDatabase(configConfig, logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	postgresMeowRepository := repository.ProvidePostgresMeowRepository(postgresConnection)
-	natsEventPublisher, cleanup2, err := event.ProvideNatsEventPublisher(configConfig)
+	postgresMeowRepository := repository.ProvidePostgresMeowRepository(db)
+	encodedConn, cleanup2, err := event.ProvideNatsConnection(configConfig)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository, natsEventPublisher)
+	natsMeowEventPublisher, cleanup3, err := event.ProvideNatsMeowEventPublisher(encodedConn)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository, natsMeowEventPublisher)
 	meowController := controller.ProvideMeowController(сreateMeowCommandHandler)
 	errorHandlerMiddleware := controller.ProvideErrorHandlerMiddleware(logger)
 	recoveryHandlerMiddleware := controller.ProvideRecoveryHandlerMiddleware(logger)
 	httpServer := controller.ProvideHttpServer(configConfig, meowController, errorHandlerMiddleware, recoveryHandlerMiddleware)
 	return httpServer, func() {
+		cleanup3()
 		cleanup2()
 		cleanup()
 	}, nil
