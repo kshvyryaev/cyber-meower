@@ -9,8 +9,8 @@
 
 # Create blank migration
 
-`migrate create -ext sql -dir .internal/meow-service/migration -seq migration_name`
+`migrate create -ext sql -dir ./pkg/migration -seq migration_name`
 
 # Apply migrations
 
-migrate -path ./internal/meow-service/migration -database 'postgres://postgres:postgres@localhost:5432/cybermeowerdb?sslmode=disable' up
+migrate -path ./pkg/migration -database 'postgres://postgres:postgres@localhost:5432/cybermeowerdb?sslmode=disable' up
