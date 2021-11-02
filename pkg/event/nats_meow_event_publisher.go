@@ -9,7 +9,7 @@ import (
 
 type NatsMeowEventPublisher struct {
 	connection *nats.EncodedConn
-	channel    chan *eventContract.MeowCreatedEvent
+	channel    chan<- *eventContract.MeowCreatedEvent
 }
 
 func ProvideNatsMeowEventPublisher(connection *nats.EncodedConn) (*NatsMeowEventPublisher, func(), error) {
