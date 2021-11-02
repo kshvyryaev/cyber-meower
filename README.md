@@ -7,10 +7,10 @@
 `docker network create nats`
 `docker run -d --name nats --network nats --rm -p 4222:4222 -p 8222:8222 nats`
 
-# Create blank migration for meow service
+# Create blank migration
 
 `migrate create -ext sql -dir .internal/meow-service/migration -seq migration_name`
 
-# Apply migration for meow service
+# Apply migrations
 
 migrate -path ./internal/meow-service/migration -database 'postgres://postgres:postgres@localhost:5432/cybermeowerdb?sslmode=disable' up

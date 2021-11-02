@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/google/wire"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/domain"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/domain"
 	"github.com/pkg/errors"
 )
 

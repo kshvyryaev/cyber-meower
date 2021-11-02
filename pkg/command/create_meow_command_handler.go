@@ -3,11 +3,11 @@ package command
 import (
 	"time"
 
-	contractEvent "github.com/kshvyryaev/cyber-meower/internal/contract/event"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/domain"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/event"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
+	eventContract "github.com/kshvyryaev/cyber-meower-event/pkg/event"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/domain"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/event"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/repository"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/service"
 	"github.com/pkg/errors"
 )
 
@@ -48,7 +48,7 @@ func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*C
 		return nil, errors.Wrap(err, "create meow command handler")
 	}
 
-	event := &contractEvent.MeowCreatedEvent{
+	event := &eventContract.MeowCreatedEvent{
 		ID:        id,
 		Body:      meow.Body,
 		CreatedOn: meow.CreatedOn,

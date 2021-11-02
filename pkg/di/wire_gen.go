@@ -7,12 +7,12 @@
 package di
 
 import (
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/command"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/config"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/controller/http"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/event"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/repository"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/service"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/command"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/config"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/event"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/repository"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/service"
 	"go.uber.org/zap"
 )
 

@@ -1,4 +1,4 @@
-module github.com/kshvyryaev/cyber-meower
+module github.com/kshvyryaev/cyber-meower-meower-service
 
 go 1.17
 
@@ -12,6 +12,7 @@ require (
 	github.com/google/subcommands v1.2.0 // indirect
 	github.com/google/wire v0.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/kshvyryaev/cyber-meower-event v0.0.0-20211102140349-f958cd2ecd85 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lib/pq v1.10.3 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/config"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/config"
 )
 
 type HttpServer struct {

@@ -5,7 +5,7 @@ import (
 	"encoding/gob"
 
 	"github.com/google/wire"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/config"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/config"
 	"github.com/nats-io/nats.go"
 	"github.com/pkg/errors"
 )

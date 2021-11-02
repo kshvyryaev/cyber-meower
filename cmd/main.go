@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/di"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/di"
 	"go.uber.org/zap"
 )
 

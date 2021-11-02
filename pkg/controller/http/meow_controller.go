@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kshvyryaev/cyber-meower/internal/meow-service/command"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/command"
 )
 
 type MeowController struct {
