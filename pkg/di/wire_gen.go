@@ -7,32 +7,38 @@
 package di
 
 import (
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/command"
-	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/config"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/event"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/repository"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/service"
-	"go.uber.org/zap"
 )
 
 // Injectors from wire.go:
 
-func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), error) {
-	configConfig := config.ProvideConfig()
+func InitializeHttpServer() (*controller.HttpServer, func(), error) {
+	config := pkg.ProvideConfig()
 	meowTranslatorService := service.ProvideMeowTranslatorService()
-	db, cleanup, err := repository.ProvidePostgresDatabase(configConfig, logger)
+	logger, cleanup, err := pkg.ProvideZap()
 	if err != nil {
 		return nil, nil, err
 	}
-	postgresMeowRepository := repository.ProvidePostgresMeowRepository(db)
-	encodedConn, cleanup2, err := event.ProvideNatsConnection(configConfig)
+	db, cleanup2, err := repository.ProvidePostgres(config, logger)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
-	natsMeowEventPublisher, cleanup3, err := event.ProvideNatsMeowEventPublisher(encodedConn)
+	postgresMeowRepository := repository.ProvidePostgresMeowRepository(db)
+	encodedConn, cleanup3, err := event.ProvideNats(config)
 	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	natsMeowEventPublisher, cleanup4, err := event.ProvideNatsMeowEventPublisher(encodedConn)
+	if err != nil {
+		cleanup3()
 		cleanup2()
 		cleanup()
 		return nil, nil, err
@@ -41,8 +47,9 @@ func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), e
 	meowController := controller.ProvideMeowController(сreateMeowCommandHandler)
 	errorHandlerMiddleware := controller.ProvideErrorHandlerMiddleware(logger)
 	recoveryHandlerMiddleware := controller.ProvideRecoveryHandlerMiddleware(logger)
-	httpServer := controller.ProvideHttpServer(configConfig, meowController, errorHandlerMiddleware, recoveryHandlerMiddleware)
+	httpServer := controller.ProvideHttpServer(config, meowController, errorHandlerMiddleware, recoveryHandlerMiddleware)
 	return httpServer, func() {
+		cleanup4()
 		cleanup3()
 		cleanup2()
 		cleanup()

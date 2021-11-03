@@ -5,22 +5,22 @@ package di
 
 import (
 	"github.com/google/wire"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/command"
-	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/config"
 	controller "github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/event"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/repository"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/service"
-	"go.uber.org/zap"
 )
 
-func InitializeHttpServer(logger *zap.Logger) (*controller.HttpServer, func(), error) {
+func InitializeHttpServer() (*controller.HttpServer, func(), error) {
 	panic(wire.Build(
-		config.ProvideConfig,
+		pkg.ProvideConfig,
+		pkg.ProvideZap,
 		service.ProvideMeowTranslatorService,
-		repository.ProvidePostgresDatabase,
+		repository.ProvidePostgres,
 		repository.PostgresMeowRepositorySet,
-		event.ProvideNatsConnection,
+		event.ProvideNats,
 		event.NatsMeowEventPublisherSet,
 		command.ProvideСreateMeowCommandHandler,
 		controller.ProvideMeowController,

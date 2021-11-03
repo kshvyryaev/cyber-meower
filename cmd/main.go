@@ -2,17 +2,10 @@ package main
 
 import (
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/di"
-	"go.uber.org/zap"
 )
 
 func main() {
-	logger, err := zap.NewProduction()
-	if err != nil {
-		panic("cannot initialize zap logger: " + err.Error())
-	}
-	defer logger.Sync()
-
-	server, cleanup, err := di.InitializeHttpServer(logger)
+	server, cleanup, err := di.InitializeHttpServer()
 	if err != nil {
 		panic("cannot initialize http server: " + err.Error())
 	}
