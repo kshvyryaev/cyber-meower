@@ -17,4 +17,4 @@ Service for creaing meow messages
 
 ## Apply migrations
 
-migrate -path ./pkg/migration -database 'postgres://postgres:postgres@localhost:5432/cybermeowerdb?sslmode=disable' up
+`migrate -path ./pkg/migration -database 'postgres://postgres:postgres@localhost:5432/cybermeowerdb?sslmode=disable' up`
