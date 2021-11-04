@@ -11,14 +11,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-type CreateMeowCommand struct {
-	Body string `json:"body"`
-}
-
-type CreateMeowCommandResponse struct {
-	ID int `json:"id"`
-}
-
 type СreateMeowCommandHandler struct {
 	translator     *service.MeowTranslatorService
 	repository     repository.MeowRepository
@@ -36,7 +28,7 @@ func ProvideСreateMeowCommandHandler(
 	}
 }
 
-func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*CreateMeowCommandResponse, error) {
+func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*CreateMeowResponse, error) {
 	meowBody := handler.translator.Translate(command.Body)
 	meow := &domain.Meow{
 		Body:      meowBody,
@@ -56,5 +48,5 @@ func (handler *СreateMeowCommandHandler) Handle(command *CreateMeowCommand) (*C
 
 	handler.eventPublisher.Publish(event)
 
-	return &CreateMeowCommandResponse{ID: id}, nil
+	return &CreateMeowResponse{ID: id}, nil
 }
