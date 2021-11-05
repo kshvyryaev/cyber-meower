@@ -9,6 +9,7 @@ package di
 import (
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/command"
+	controller2 "github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/grpc"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/event"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/repository"
@@ -49,6 +50,43 @@ func InitializeHttpServer() (*controller.HttpServer, func(), error) {
 	httpRecoveryHandlerMiddleware := controller.ProvideHttpRecoveryHandlerMiddleware(logger)
 	httpServer := controller.ProvideHttpServer(config, httpMeowController, httpErrorHandlerMiddleware, httpRecoveryHandlerMiddleware)
 	return httpServer, func() {
+		cleanup4()
+		cleanup3()
+		cleanup2()
+		cleanup()
+	}, nil
+}
+
+func InitializeGrpcServer() (*controller2.GrpcServer, func(), error) {
+	config := pkg.ProvideConfig()
+	meowTranslatorService := service.ProvideMeowTranslatorService()
+	logger, cleanup, err := pkg.ProvideZap()
+	if err != nil {
+		return nil, nil, err
+	}
+	db, cleanup2, err := repository.ProvidePostgres(config, logger)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	postgresMeowRepository := repository.ProvidePostgresMeowRepository(db)
+	encodedConn, cleanup3, err := event.ProvideNats(config)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	natsMeowEventPublisher, cleanup4, err := event.ProvideNatsMeowEventPublisher(encodedConn)
+	if err != nil {
+		cleanup3()
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository, natsMeowEventPublisher)
+	grpcMeowController := controller2.ProvideGrpcMeowController(сreateMeowCommandHandler)
+	grpcServer := controller2.ProvideGrpcServer(config, grpcMeowController)
+	return grpcServer, func() {
 		cleanup4()
 		cleanup3()
 		cleanup2()

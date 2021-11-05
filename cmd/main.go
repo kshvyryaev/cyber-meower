@@ -5,11 +5,14 @@ import (
 )
 
 func main() {
-	server, cleanup, err := di.InitializeHttpServer()
+	server, cleanup, err := di.InitializeGrpcServer()
 	if err != nil {
 		panic("cannot initialize http server: " + err.Error())
 	}
 	defer cleanup()
 
-	server.Run()
+	err = server.Run()
+	if err != nil {
+		panic("cannot run http server: " + err.Error())
+	}
 }

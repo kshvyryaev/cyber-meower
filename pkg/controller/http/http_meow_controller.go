@@ -20,11 +20,11 @@ func ProvideHttpMeowController(createMeowCommandHandler *command.СreateMeowComm
 func (controller *HttpMeowController) Route(router *gin.Engine) {
 	meow := router.Group("/meow")
 	{
-		meow.POST("/", controller.CreateMeow)
+		meow.POST("/", controller.Create)
 	}
 }
 
-func (controller *HttpMeowController) CreateMeow(context *gin.Context) {
+func (controller *HttpMeowController) Create(context *gin.Context) {
 	var command command.CreateMeowCommand
 	if err := context.BindJSON(&command); err != nil {
 		context.Error(err)
