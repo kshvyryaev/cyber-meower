@@ -7,16 +7,16 @@ import (
 
 type HttpServer struct {
 	config                    *pkg.Config
-	meowController            *MeowController
-	errorHandlerMiddleware    *ErrorHandlerMiddleware
-	recoveryHandlerMiddleware *RecoveryHandlerMiddleware
+	meowController            *HttpMeowController
+	errorHandlerMiddleware    *HttpErrorHandlerMiddleware
+	recoveryHandlerMiddleware *HttpRecoveryHandlerMiddleware
 }
 
 func ProvideHttpServer(
 	config *pkg.Config,
-	meowController *MeowController,
-	errorHandlerMiddleware *ErrorHandlerMiddleware,
-	recoveryHandlerMiddleware *RecoveryHandlerMiddleware) *HttpServer {
+	meowController *HttpMeowController,
+	errorHandlerMiddleware *HttpErrorHandlerMiddleware,
+	recoveryHandlerMiddleware *HttpRecoveryHandlerMiddleware) *HttpServer {
 	return &HttpServer{
 		config:                    config,
 		meowController:            meowController,

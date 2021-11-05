@@ -23,9 +23,9 @@ func InitializeHttpServer() (*controller.HttpServer, func(), error) {
 		event.ProvideNats,
 		event.NatsMeowEventPublisherSet,
 		command.ProvideСreateMeowCommandHandler,
-		controller.ProvideMeowController,
-		controller.ProvideErrorHandlerMiddleware,
-		controller.ProvideRecoveryHandlerMiddleware,
+		controller.ProvideHttpMeowController,
+		controller.ProvideHttpErrorHandlerMiddleware,
+		controller.ProvideHttpRecoveryHandlerMiddleware,
 		controller.ProvideHttpServer,
 	))
 }

@@ -7,24 +7,24 @@ import (
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/command"
 )
 
-type MeowController struct {
+type HttpMeowController struct {
 	createMeowCommandHandler *command.СreateMeowCommandHandler
 }
 
-func ProvideMeowController(createMeowCommandHandler *command.СreateMeowCommandHandler) *MeowController {
-	return &MeowController{
+func ProvideHttpMeowController(createMeowCommandHandler *command.СreateMeowCommandHandler) *HttpMeowController {
+	return &HttpMeowController{
 		createMeowCommandHandler: createMeowCommandHandler,
 	}
 }
 
-func (controller *MeowController) Route(router *gin.Engine) {
+func (controller *HttpMeowController) Route(router *gin.Engine) {
 	meow := router.Group("/meow")
 	{
 		meow.POST("/", controller.CreateMeow)
 	}
 }
 
-func (controller *MeowController) CreateMeow(context *gin.Context) {
+func (controller *HttpMeowController) CreateMeow(context *gin.Context) {
 	var command command.CreateMeowCommand
 	if err := context.BindJSON(&command); err != nil {
 		context.Error(err)

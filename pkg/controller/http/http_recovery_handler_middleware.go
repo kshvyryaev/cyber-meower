@@ -7,22 +7,22 @@ import (
 	"go.uber.org/zap"
 )
 
-type RecoveryHandlerMiddleware struct {
+type HttpRecoveryHandlerMiddleware struct {
 	logger *zap.Logger
 }
 
-func ProvideRecoveryHandlerMiddleware(logger *zap.Logger) *RecoveryHandlerMiddleware {
-	return &RecoveryHandlerMiddleware{
+func ProvideHttpRecoveryHandlerMiddleware(logger *zap.Logger) *HttpRecoveryHandlerMiddleware {
+	return &HttpRecoveryHandlerMiddleware{
 		logger: logger,
 	}
 }
 
-func (handler *RecoveryHandlerMiddleware) Handle() gin.HandlerFunc {
+func (handler *HttpRecoveryHandlerMiddleware) Handle() gin.HandlerFunc {
 	return gin.CustomRecovery(func(context *gin.Context, recovered interface{}) {
 		err, ok := recovered.(string)
 
 		if ok {
-			context.AbortWithStatusJSON(http.StatusInternalServerError, ErrorResponse{Message: err})
+			context.AbortWithStatusJSON(http.StatusInternalServerError, HttpErrorResponse{Message: err})
 		} else {
 			context.AbortWithStatus(http.StatusInternalServerError)
 		}

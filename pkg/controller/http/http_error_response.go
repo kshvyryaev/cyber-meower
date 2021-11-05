@@ -1,5 +1,5 @@
 package controller
 
-type ErrorResponse struct {
+type HttpErrorResponse struct {
 	Message string
 }

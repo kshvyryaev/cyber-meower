@@ -44,10 +44,10 @@ func InitializeHttpServer() (*controller.HttpServer, func(), error) {
 		return nil, nil, err
 	}
 	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository, natsMeowEventPublisher)
-	meowController := controller.ProvideMeowController(сreateMeowCommandHandler)
-	errorHandlerMiddleware := controller.ProvideErrorHandlerMiddleware(logger)
-	recoveryHandlerMiddleware := controller.ProvideRecoveryHandlerMiddleware(logger)
-	httpServer := controller.ProvideHttpServer(config, meowController, errorHandlerMiddleware, recoveryHandlerMiddleware)
+	httpMeowController := controller.ProvideHttpMeowController(сreateMeowCommandHandler)
+	httpErrorHandlerMiddleware := controller.ProvideHttpErrorHandlerMiddleware(logger)
+	httpRecoveryHandlerMiddleware := controller.ProvideHttpRecoveryHandlerMiddleware(logger)
+	httpServer := controller.ProvideHttpServer(config, httpMeowController, httpErrorHandlerMiddleware, httpRecoveryHandlerMiddleware)
 	return httpServer, func() {
 		cleanup4()
 		cleanup3()
