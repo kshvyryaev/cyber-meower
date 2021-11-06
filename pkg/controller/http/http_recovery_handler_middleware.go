@@ -27,6 +27,6 @@ func (handler *HttpRecoveryHandlerMiddleware) Handle() gin.HandlerFunc {
 			context.AbortWithStatus(http.StatusInternalServerError)
 		}
 
-		handler.logger.Error("panic happend: " + err)
+		handler.logger.Error("panic happend", zap.String("error", err))
 	})
 }

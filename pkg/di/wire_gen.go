@@ -85,7 +85,8 @@ func InitializeGrpcServer() (*controller2.GrpcServer, func(), error) {
 	}
 	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository, natsMeowEventPublisher)
 	grpcMeowController := controller2.ProvideGrpcMeowController(сreateMeowCommandHandler)
-	grpcServer := controller2.ProvideGrpcServer(config, grpcMeowController)
+	grpcErrorHandlerInterceptor := controller2.ProvideGrpcErrorHandlerInterceptor(logger)
+	grpcServer := controller2.ProvideGrpcServer(config, grpcMeowController, grpcErrorHandlerInterceptor)
 	return grpcServer, func() {
 		cleanup4()
 		cleanup3()

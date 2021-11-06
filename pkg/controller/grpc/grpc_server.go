@@ -10,14 +10,19 @@ import (
 )
 
 type GrpcServer struct {
-	config         *pkg.Config
-	meowController *GrpcMeowController
+	config                  *pkg.Config
+	meowController          *GrpcMeowController
+	errorHandlerInterceptor *GrpcErrorHandlerInterceptor
 }
 
-func ProvideGrpcServer(config *pkg.Config, meowController *GrpcMeowController) *GrpcServer {
+func ProvideGrpcServer(
+	config *pkg.Config,
+	meowController *GrpcMeowController,
+	errorHandlerInterceptor *GrpcErrorHandlerInterceptor) *GrpcServer {
 	return &GrpcServer{
-		config:         config,
-		meowController: meowController,
+		config:                  config,
+		meowController:          meowController,
+		errorHandlerInterceptor: errorHandlerInterceptor,
 	}
 }
 
@@ -27,8 +32,8 @@ func (server *GrpcServer) Run() error {
 		return errors.Wrap(err, "grpc server")
 	}
 
-	// TODO: Add error and panic interceptors
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(server.errorHandlerInterceptor.Handle))
+
 	proto.RegisterMeowServiceServer(grpcServer, server.meowController)
 
 	grpcServer.Serve(listener)

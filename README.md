@@ -9,7 +9,7 @@ Service for creaing meow messages
 ## Run nats docker
 
 `docker network create nats`
-`docker run -d --name nats --network nats --rm -p 4222:4222 -p 8222:8222 nats`
+`docker run -d --name nats --network nats -p 4222:4222 -p 8222:8222 nats`
 
 ## Create blank migration
 

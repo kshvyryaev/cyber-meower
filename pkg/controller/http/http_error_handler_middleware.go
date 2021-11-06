@@ -25,7 +25,7 @@ func (handler *HttpErrorHandlerMiddleware) Handle() gin.HandlerFunc {
 			err := context.Errors[0].Err
 			context.AbortWithStatusJSON(http.StatusInternalServerError, HttpErrorResponse{Message: err.Error()})
 
-			handler.logger.Error("error happend: " + err.Error())
+			handler.logger.Error("error happend", zap.Error(err))
 		}
 	}
 }

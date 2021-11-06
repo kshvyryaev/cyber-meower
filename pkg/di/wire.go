@@ -42,6 +42,7 @@ func InitializeGrpcServer() (*grpcController.GrpcServer, func(), error) {
 		event.NatsMeowEventPublisherSet,
 		command.ProvideСreateMeowCommandHandler,
 		grpcController.ProvideGrpcMeowController,
+		grpcController.ProvideGrpcErrorHandlerInterceptor,
 		grpcController.ProvideGrpcServer,
 	))
 }
