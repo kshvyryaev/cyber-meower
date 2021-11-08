@@ -18,3 +18,15 @@ Service for creaing meow messages
 ## Apply migrations
 
 `migrate -path ./pkg/migration -database 'postgres://postgres:postgres@localhost:5432/cybermeowerdb?sslmode=disable' up`
+
+## Build docker
+
+`docker build --tag cyber-meower-meower-service .`
+
+## Run docker
+
+`docker run -d -p 8080:8080 cyber-meower-meower-service`
+
+## Connect to container
+
+`docker exec -it cyber-meower-meower-service /bin/bash`
