@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/google/wire"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/domain"
 	"github.com/pkg/errors"
 )
@@ -28,8 +27,3 @@ func (repository *PostgresMeowRepository) Create(meow *domain.Meow) (int, error)
 
 	return int(id), nil
 }
-
-var PostgresMeowRepositorySet = wire.NewSet(
-	ProvidePostgresMeowRepository,
-	wire.Bind(new(MeowRepository), new(*PostgresMeowRepository)),
-)

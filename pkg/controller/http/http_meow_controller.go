@@ -1,19 +1,21 @@
-package controller
+package http
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/command"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http/request"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http/response"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/domain"
 )
 
 type HttpMeowController struct {
-	createMeowCommandHandler *command.СreateMeowCommandHandler
+	usecase domain.MeowUsecase
 }
 
-func ProvideHttpMeowController(createMeowCommandHandler *command.СreateMeowCommandHandler) *HttpMeowController {
+func ProvideHttpMeowController(usecase domain.MeowUsecase) *HttpMeowController {
 	return &HttpMeowController{
-		createMeowCommandHandler: createMeowCommandHandler,
+		usecase: usecase,
 	}
 }
 
@@ -25,16 +27,20 @@ func (controller *HttpMeowController) Route(router *gin.Engine) {
 }
 
 func (controller *HttpMeowController) Create(context *gin.Context) {
-	var command command.CreateMeowCommand
-	if err := context.BindJSON(&command); err != nil {
+	var request request.CreateMeowRequest
+	if err := context.BindJSON(&request); err != nil {
 		context.Error(err)
 		return
 	}
 
-	response, err := controller.createMeowCommandHandler.Handle(&command)
+	id, err := controller.usecase.Create(request.Body)
 	if err != nil {
 		context.Error(err)
 		return
+	}
+
+	response := response.CreateMeowResponse{
+		ID: id,
 	}
 
 	context.JSON(http.StatusOK, response)

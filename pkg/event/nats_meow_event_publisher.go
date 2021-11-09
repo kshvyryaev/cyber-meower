@@ -1,7 +1,6 @@
 package event
 
 import (
-	"github.com/google/wire"
 	eventContract "github.com/kshvyryaev/cyber-meower-event/pkg/event"
 	"github.com/nats-io/nats.go"
 	"github.com/pkg/errors"
@@ -30,8 +29,3 @@ func ProvideNatsMeowEventPublisher(connection *nats.EncodedConn) (*NatsMeowEvent
 func (publisher *NatsMeowEventPublisher) Publish(event *eventContract.MeowCreatedEvent) {
 	publisher.channel <- event
 }
-
-var NatsMeowEventPublisherSet = wire.NewSet(
-	ProvideNatsMeowEventPublisher,
-	wire.Bind(new(MeowEventPublisher), new(*NatsMeowEventPublisher)),
-)

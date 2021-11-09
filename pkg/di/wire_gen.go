@@ -8,17 +8,18 @@ package di
 
 import (
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg"
-	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/command"
-	controller2 "github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/grpc"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/grpc"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http/middleware"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/event"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/repository"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/service"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/usecase"
 )
 
 // Injectors from wire.go:
 
-func InitializeHttpServer() (*controller.HttpServer, func(), error) {
+func InitializeHttpServer() (*http.HttpServer, func(), error) {
 	config := pkg.ProvideConfig()
 	meowTranslatorService := service.ProvideMeowTranslatorService()
 	logger, cleanup, err := pkg.ProvideZap()
@@ -44,11 +45,11 @@ func InitializeHttpServer() (*controller.HttpServer, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository, natsMeowEventPublisher)
-	httpMeowController := controller.ProvideHttpMeowController(сreateMeowCommandHandler)
-	httpErrorHandlerMiddleware := controller.ProvideHttpErrorHandlerMiddleware(logger)
-	httpRecoveryHandlerMiddleware := controller.ProvideHttpRecoveryHandlerMiddleware(logger)
-	httpServer := controller.ProvideHttpServer(config, httpMeowController, httpErrorHandlerMiddleware, httpRecoveryHandlerMiddleware)
+	meowUsecase := usecase.ProvideMeowUsecase(meowTranslatorService, postgresMeowRepository, natsMeowEventPublisher)
+	httpMeowController := http.ProvideHttpMeowController(meowUsecase)
+	httpErrorHandlerMiddleware := middleware.ProvideHttpErrorHandlerMiddleware(logger)
+	httpRecoveryHandlerMiddleware := middleware.ProvideHttpRecoveryHandlerMiddleware(logger)
+	httpServer := http.ProvideHttpServer(config, httpMeowController, httpErrorHandlerMiddleware, httpRecoveryHandlerMiddleware)
 	return httpServer, func() {
 		cleanup4()
 		cleanup3()
@@ -57,7 +58,7 @@ func InitializeHttpServer() (*controller.HttpServer, func(), error) {
 	}, nil
 }
 
-func InitializeGrpcServer() (*controller2.GrpcServer, func(), error) {
+func InitializeGrpcServer() (*grpc.GrpcServer, func(), error) {
 	config := pkg.ProvideConfig()
 	meowTranslatorService := service.ProvideMeowTranslatorService()
 	logger, cleanup, err := pkg.ProvideZap()
@@ -83,10 +84,10 @@ func InitializeGrpcServer() (*controller2.GrpcServer, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	сreateMeowCommandHandler := command.ProvideСreateMeowCommandHandler(meowTranslatorService, postgresMeowRepository, natsMeowEventPublisher)
-	grpcMeowController := controller2.ProvideGrpcMeowController(сreateMeowCommandHandler)
-	grpcErrorHandlerInterceptor := controller2.ProvideGrpcErrorHandlerInterceptor(logger)
-	grpcServer := controller2.ProvideGrpcServer(config, grpcMeowController, grpcErrorHandlerInterceptor)
+	meowUsecase := usecase.ProvideMeowUsecase(meowTranslatorService, postgresMeowRepository, natsMeowEventPublisher)
+	grpcMeowController := grpc.ProvideGrpcMeowController(meowUsecase)
+	grpcErrorHandlerInterceptor := grpc.ProvideGrpcErrorHandlerInterceptor(logger)
+	grpcServer := grpc.ProvideGrpcServer(config, grpcMeowController, grpcErrorHandlerInterceptor)
 	return grpcServer, func() {
 		cleanup4()
 		cleanup3()

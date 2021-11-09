@@ -1,9 +1,10 @@
-package controller
+package middleware
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http/response"
 	"go.uber.org/zap"
 )
 
@@ -22,7 +23,7 @@ func (handler *HttpRecoveryHandlerMiddleware) Handle() gin.HandlerFunc {
 		err, ok := recovered.(string)
 
 		if ok {
-			context.AbortWithStatusJSON(http.StatusInternalServerError, HttpErrorResponse{Message: err})
+			context.AbortWithStatusJSON(http.StatusInternalServerError, response.HttpErrorResponse{Message: err})
 		} else {
 			context.AbortWithStatus(http.StatusInternalServerError)
 		}
