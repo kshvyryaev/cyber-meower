@@ -4,20 +4,21 @@ import (
 	"time"
 
 	eventContract "github.com/kshvyryaev/cyber-meower-event/pkg/event"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/contract"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/domain"
 	"github.com/pkg/errors"
 )
 
 type MeowUsecase struct {
-	translator     domain.MeowTranslatorService
-	repository     domain.MeowRepository
-	eventPublisher domain.MeowEventPublisher
+	translator     contract.MeowTranslatorService
+	repository     contract.MeowRepository
+	eventPublisher contract.MeowEventPublisher
 }
 
 func ProvideMeowUsecase(
-	translator domain.MeowTranslatorService,
-	repository domain.MeowRepository,
-	eventPublisher domain.MeowEventPublisher) *MeowUsecase {
+	translator contract.MeowTranslatorService,
+	repository contract.MeowRepository,
+	eventPublisher contract.MeowEventPublisher) *MeowUsecase {
 	return &MeowUsecase{
 		translator:     translator,
 		repository:     repository,

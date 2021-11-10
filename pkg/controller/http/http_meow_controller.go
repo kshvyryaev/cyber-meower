@@ -4,16 +4,16 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/contract"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http/request"
 	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/controller/http/response"
-	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/domain"
 )
 
 type HttpMeowController struct {
-	usecase domain.MeowUsecase
+	usecase contract.MeowUsecase
 }
 
-func ProvideHttpMeowController(usecase domain.MeowUsecase) *HttpMeowController {
+func ProvideHttpMeowController(usecase contract.MeowUsecase) *HttpMeowController {
 	return &HttpMeowController{
 		usecase: usecase,
 	}

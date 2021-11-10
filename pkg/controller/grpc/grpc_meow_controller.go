@@ -3,17 +3,17 @@ package grpc
 import (
 	"context"
 
-	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/domain"
+	"github.com/kshvyryaev/cyber-meower-meower-service/pkg/contract"
 	"github.com/kshvyryaev/cyber-meower-proto/pkg/proto"
 	"github.com/pkg/errors"
 )
 
 type GrpcMeowController struct {
 	proto.UnimplementedMeowServiceServer
-	usecase domain.MeowUsecase
+	usecase contract.MeowUsecase
 }
 
-func ProvideGrpcMeowController(usecase domain.MeowUsecase) *GrpcMeowController {
+func ProvideGrpcMeowController(usecase contract.MeowUsecase) *GrpcMeowController {
 	return &GrpcMeowController{
 		usecase: usecase,
 	}
