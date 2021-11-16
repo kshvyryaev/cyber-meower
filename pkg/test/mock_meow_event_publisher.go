@@ -10,4 +10,5 @@ type MockMeowEventPublisher struct {
 }
 
 func (publisher *MockMeowEventPublisher) Publish(event *eventContract.MeowCreatedEvent) {
+	publisher.Called(event)
 }
