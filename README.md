@@ -30,3 +30,24 @@ Service for creaing meow messages
 ## Connect to container
 
 `docker exec -it cyber-meower-meower-service /bin/bash`
+
+## Run tests
+
+`go test ./pkg/test -v`
+
+## Run tests with coverage
+
+`go test ./pkg/test -v -cover -coverpkg ./pkg/service`
+`go test ./pkg/test -v -cover -coverpkg ./pkg/usecase`
+
+## Generate coverage profile
+
+`go test ./pkg/test -coverprofile=cover.out -coverpkg ./pkg/service`
+
+## Generate coverage html
+
+`go tool cover -html=cover.out -o cover.html`
+
+## Run bechmark tests
+
+`go test ./pkg/test -bench . -benchmem .`

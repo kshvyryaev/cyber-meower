@@ -30,6 +30,7 @@ func (service *MeowTranslatorService) Translate(body string) string {
 			sb.WriteString(" sniff")
 		}
 	}
+
 	sb.WriteString(" (translated from leather language: ")
 	sb.WriteString(body)
 	sb.WriteString(")")
