@@ -20,7 +20,10 @@ import (
 // Injectors from wire.go:
 
 func InitializeHttpServer() (*http.HttpServer, func(), error) {
-	config := pkg.ProvideConfig()
+	config, err := pkg.ProvideConfig()
+	if err != nil {
+		return nil, nil, err
+	}
 	meowTranslatorService := service.ProvideMeowTranslatorService()
 	logger, cleanup, err := pkg.ProvideZap()
 	if err != nil {
@@ -59,7 +62,10 @@ func InitializeHttpServer() (*http.HttpServer, func(), error) {
 }
 
 func InitializeGrpcServer() (*grpc.GrpcServer, func(), error) {
-	config := pkg.ProvideConfig()
+	config, err := pkg.ProvideConfig()
+	if err != nil {
+		return nil, nil, err
+	}
 	meowTranslatorService := service.ProvideMeowTranslatorService()
 	logger, cleanup, err := pkg.ProvideZap()
 	if err != nil {

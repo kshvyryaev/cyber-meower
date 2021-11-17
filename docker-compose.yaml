@@ -1,0 +1,70 @@
+version: "3.9"
+
+services:
+  habr-worker:
+    image: cyber-meower-habr-worker
+    restart: always
+    depends_on:
+      - meower-service
+    environment:
+      MEOWER_SERVICE_ADDRESS: "meower-service:8080"
+
+  meower-service:
+    image: cyber-meower-meower-service
+    restart: always
+    depends_on:
+      - postgres
+      - nats
+    ports:
+      - 8080:8080
+    environment:
+      PORT: "8080"
+      DATABASE_CONNECTION_STRING: "postgres://cybermeower:123456@postgres/cybermeowerdb?sslmode=disable"
+      EVENT_STORE_ADDRESS: "nats:4222"
+
+  query-worker:
+    image: cyber-meower-query-worker
+    restart: always
+    depends_on:
+      - nats
+      - elastic
+    environment:
+      EVENT_STORE_ADDRESS: "nats:4222"
+      ELASTIC_ADDRESS: "http://elastic:9200"
+
+  query-service:
+    image: cyber-meower-query-service
+    restart: always
+    depends_on:
+      - elastic
+    ports:
+      - 8090:8090
+    environment:
+      PORT: "8090"
+      ELASTIC_ADDRESS: "http://elastic:9200"
+
+  postgres:
+    image: cyber-meower-postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: "cybermeowerdb"
+      POSTGRES_USER: "cybermeower"
+      POSTGRES_PASSWORD: "123456"
+
+  nats:
+    image: nats
+    restart: always
+    ports:
+      - 4222:4222
+      - 8222:8222
+
+  elastic:
+    image: elasticsearch:7.14.2
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node

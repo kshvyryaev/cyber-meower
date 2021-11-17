@@ -1,23 +1,21 @@
 package pkg
 
 import (
-	"flag"
+	"github.com/kelseyhightower/envconfig"
+	"github.com/pkg/errors"
 )
 
 type Config struct {
-	Port                     string
-	DatabaseConnectionString string
-	EventStoreAddress        string
+	Port                     string `envconfig:"PORT"`
+	DatabaseConnectionString string `envconfig:"DATABASE_CONNECTION_STRING"`
+	EventStoreAddress        string `envconfig:"EVENT_STORE_ADDRESS"`
 }
 
-func ProvideConfig() *Config {
-	config := &Config{
-		Port:                     *flag.String("port", "8080", "Server port"),
-		DatabaseConnectionString: *flag.String("databaseConnectionString", "host=localhost port=5432 user=postgres password=postgres dbname=cybermeowerdb sslmode=disable", "Database connection string"),
-		EventStoreAddress:        *flag.String("eventStoreAddress", "127.0.0.1:4222", "Event store address"),
+func ProvideConfig() (*Config, error) {
+	var config Config
+	err := envconfig.Process("", &config)
+	if err != nil {
+		return nil, errors.Wrap(err, "config")
 	}
-
-	flag.Parse()
-
-	return config
+	return &config, nil
 }

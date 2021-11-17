@@ -23,9 +23,17 @@ Service for creaing meow messages
 
 `docker build --tag cyber-meower-meower-service .`
 
+## Build postgres docker
+
+`docker build --tag cyber-meower-postgres .`
+
 ## Run docker
 
 `docker run -d -p 8080:8080 cyber-meower-meower-service`
+
+## Run docker compose (befor running you need to build containers for all cyber meower projects)
+
+`docker compose up`
 
 ## Connect to container
 
